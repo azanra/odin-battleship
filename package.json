@@ -1,0 +1,58 @@
+{
+  "name": "typescript-webpack-template",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/azanra/typescript-webpack-template#readme",
+  "bugs": {
+    "url": "https://github.com/azanra/typescript-webpack-template/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azanra/typescript-webpack-template.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "jest",
+    "prepare": "husky",
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "precheckout": "git branch gh-pages",
+    "checkout": "git status",
+    "postcheckout": "git checkout gh-pages && git merge main --no-edit",
+    "predeploy": "npm run build",
+    "deploy": "git add dist -f && git commit -m 'build: deploy to gh pages'",
+    "postdeploy": "git subtree push --prefix dist origin gh-pages && git checkout main"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.4.1",
+    "babel-jest": "^30.4.1",
+    "css-loader": "^7.1.4",
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.9.0",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.8",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "lint-staged": "^17.3.0",
+    "prettier": "3.9.6",
+    "style-loader": "^4.0.0",
+    "ts-jest": "^29.4.12",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0",
+    "webpack": "^5.109.2",
+    "webpack-cli": "^7.2.2",
+    "webpack-dev-server": "^6.0.0",
+    "webpack-merge": "^6.0.1"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
