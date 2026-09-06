@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import Ship from "../utils/ship";
+import Ship from "../utils/Ship";
 
 const SHIP_LENGTH = 3;
 
-describe("ship", () => {
+describe("Ship", () => {
   const currentShip = Ship(SHIP_LENGTH);
 
   const increaseHitToShipLength = () => {
