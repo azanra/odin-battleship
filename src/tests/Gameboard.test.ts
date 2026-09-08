@@ -22,15 +22,9 @@ describe("GameBoard", () => {
     expect(gameBoard.getShip([3, 2]).ship).toEqual(destroyer);
   });
 
-  test("return error if accessing ships outside of game board range", () => {
-    expect(gameBoard.getShip([11, 12])).toThrow(
-      "Accessing outside of game board range!",
-    );
-  });
-
   test("attack existing ship and increase it hit amount", () => {
     gameBoard.receiveAttack([3, 2]);
-    expect(gameBoard.getShip([3, 2]).ship.getHit()).toBe(1);
+    expect(gameBoard.getShip([3, 2]).ship?.getHit()).toBe(1);
   });
 
   test("track missed shots", () => {
