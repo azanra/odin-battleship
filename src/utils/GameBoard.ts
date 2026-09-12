@@ -1,8 +1,4 @@
-import type {
-  IBoard,
-  ICoordinate,
-  ShipCoordinateRange,
-} from "../interfaces/GameBoardInterface";
+import type { IBoard, ICoordinate } from "../interfaces/GameBoardInterface";
 import type { IShip } from "../interfaces/ShipInterface";
 
 const GameBoard = () => {
@@ -30,10 +26,7 @@ const GameBoard = () => {
   ) => {
     gameBoard.forEach((row, rowIndex) => {
       row.forEach((_, columnIndex) => {
-        const currentBoard =
-          gameBoard[rowIndex as ShipCoordinateRange][
-            columnIndex as ShipCoordinateRange
-          ];
+        const currentBoard = getShip([rowIndex, columnIndex] as ICoordinate);
 
         const isInRange =
           isInRangeOfCoordinate(
@@ -54,7 +47,13 @@ const GameBoard = () => {
     });
   };
 
-  return { getBoard, getShip, placeShip };
+  const receiveAttack = (coordinate: ICoordinate) => {
+    const currentBoard = getShip(coordinate);
+    currentBoard.ship?.hit();
+    currentBoard.isAttacked = true;
+  };
+
+  return { getBoard, getShip, placeShip, receiveAttack };
 };
 
 export default GameBoard;
