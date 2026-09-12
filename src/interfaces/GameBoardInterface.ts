@@ -24,3 +24,8 @@ type FixedArray<T, N extends number> = GrowToSize<T, N, []>;
 export type IBoard = FixedArray<FixedArray<BoardItem, 10>, 10>;
 
 export type ICoordinate = [ShipCoordinateRange, ShipCoordinateRange];
+
+export interface IRangeOfCoordinate {
+  range: ICoordinate;
+  expected: "undefined" | "exist";
+}
