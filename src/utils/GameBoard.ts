@@ -53,7 +53,24 @@ const GameBoard = () => {
     currentBoard.isAttacked = true;
   };
 
-  return { getBoard, getShip, placeShip, receiveAttack };
+  const isAllShipsSunk = () => {
+    let isAllSunk = true;
+
+    gameBoard.forEach((row, rowIndex) => {
+      row.forEach((_, columnIndex) => {
+        const currentBoard = getShip([rowIndex, columnIndex] as ICoordinate);
+        const currentShip = currentBoard.ship;
+
+        if (currentShip && !currentShip.isSunk()) {
+          isAllSunk = false;
+        }
+      });
+    });
+
+    return isAllSunk;
+  };
+
+  return { getBoard, getShip, placeShip, receiveAttack, isAllShipsSunk };
 };
 
 export default GameBoard;
