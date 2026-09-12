@@ -1,11 +1,14 @@
 import { describe, expect, test } from "@jest/globals";
 import Ship from "../utils/Ship";
 import GameBoard from "../utils/GameBoard";
-import type { IRangeOfCoordinate } from "../interfaces/GameBoardInterface";
+import type {
+  ICoordinate,
+  IRangeOfCoordinate,
+} from "../interfaces/GameBoardInterface";
 
 describe("GameBoard", () => {
   const gameBoard = GameBoard();
-  const destroyer = Ship(2);
+  const destroyer = Ship(3);
 
   test("get an empty game board", () => {
     const emptyGameBoard = Array.from(new Array(10), () =>
