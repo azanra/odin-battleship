@@ -45,6 +45,7 @@ describe("GameBoard", () => {
   test("track missed shots", () => {
     gameBoard.receiveAttack([0, 0]);
     expect(gameBoard.getShip([0, 0]).isAttacked).toBe(true);
+    expect(gameBoard.getShip([0, 0]).ship).toBeUndefined();
   });
 
   test("check if all ships have been sunk", () => {
