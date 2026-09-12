@@ -52,6 +52,13 @@ describe("GameBoard", () => {
   });
 
   test("check if all ships have been sunk", () => {
+    const leftoverShip: ICoordinate[] = [
+      [3, 3],
+      [3, 4],
+    ];
+    leftoverShip.forEach((ship) => {
+      gameBoard.receiveAttack(ship);
+    });
     expect(gameBoard.isAllShipsSunk()).toBe(true);
   });
 });
