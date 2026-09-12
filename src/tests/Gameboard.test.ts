@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import Ship from "../utils/Ship";
 import GameBoard from "../utils/GameBoard";
+import type { IRangeOfCoordinate } from "../interfaces/GameBoardInterface";
 
 describe("GameBoard", () => {
   const gameBoard = GameBoard();
@@ -14,8 +15,22 @@ describe("GameBoard", () => {
   });
 
   test("place ships at specific coordinate", () => {
-    gameBoard.placeShip({ start: [3, 2], end: [3, 3] }, destroyer);
-    expect(gameBoard.getShip([3, 2]).ship).toEqual(destroyer);
+    gameBoard.placeShip({ start: [3, 2], end: [3, 4] }, destroyer);
+
+    const rangeOfCoordinate: IRangeOfCoordinate[] = [
+      { range: [3, 1], expected: "undefined" },
+      { range: [3, 2], expected: "exist" },
+      { range: [3, 3], expected: "exist" },
+      { range: [3, 4], expected: "exist" },
+      { range: [3, 5], expected: "undefined" },
+    ];
+
+    rangeOfCoordinate.forEach((coordinate) => {
+      if (coordinate.expected === "undefined")
+        return expect(gameBoard.getShip(coordinate.range).ship).toBeUndefined();
+
+      expect(gameBoard.getShip(coordinate.range).ship).toEqual(destroyer);
+    });
   });
 
   test("return ships at specific coordinate", () => {
