@@ -1,5 +1,5 @@
-import type { IBoard, ICoordinate } from "../interfaces/GameBoardInterface";
-import type { IShip } from "../interfaces/ShipInterface";
+import type { IBoard, ICoordinate } from "../interfaces/GameBoardInterface.ts";
+import type { IShip } from "../interfaces/ShipInterface.ts";
 
 const GameBoard = () => {
   const gameBoard = Array.from(new Array(10), () =>

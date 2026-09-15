@@ -1,3 +1,5 @@
 import "./styles.css";
+import View from "./utils/View.ts";
 
-console.log("Hello World");
+const view = View();
+view.main();

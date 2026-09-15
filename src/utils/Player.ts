@@ -1,4 +1,4 @@
-import GameBoard from "./GameBoard";
+import GameBoard from "./GameBoard.ts";
 
 const Player = () => {
   const playerBoard = GameBoard();
