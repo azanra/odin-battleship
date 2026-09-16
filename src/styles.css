@@ -12,6 +12,7 @@ main {
 
 .cell {
   border: 1px solid;
+  opacity: 0.25;
   height: 32px;
   width: 32px;
 }

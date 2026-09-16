@@ -1,4 +1,4 @@
-import type { IShip } from "./ShipInterface";
+import type { IShip } from "./ShipInterface.ts";
 
 // https://stackoverflow.com/a/79224862
 // Only accept number range from 0 - 9, exponentially grow to specified size recursively
@@ -7,7 +7,7 @@ export type ShipCoordinateRange<Acc extends number[] = []> =
     ? Acc[number]
     : ShipCoordinateRange<[...Acc, Acc["length"]]>;
 
-type BoardItem = {
+export type BoardItem = {
   ship: undefined | IShip;
   isAttacked: boolean;
 };

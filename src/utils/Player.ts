@@ -3,9 +3,9 @@ import GameBoard from "./GameBoard.ts";
 const Player = () => {
   const playerBoard = GameBoard();
 
-  const getBoard = () => playerBoard.getBoard();
+  const getPlayerBoard = () => playerBoard;
 
-  return { getBoard };
+  return { getPlayerBoard };
 };
 
 export default Player;
