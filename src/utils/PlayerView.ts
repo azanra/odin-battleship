@@ -1,13 +1,11 @@
 import PREDETERMINED_SHIP from "../constants/predeterminedShip.ts";
-import type {
-  BoardItem,
-  IBoard,
-  ICoordinate,
-} from "../interfaces/GameBoardInterface.ts";
-import type { IPredeterminedShip, IShip } from "../interfaces/ShipInterface.ts";
+import type { ICoordinate } from "../interfaces/GameBoardInterface.ts";
+import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
 import Player from "./Player.ts";
 
-const View = (identifier: "player" | "computer") => {
+const PlayerView = (identifier: "player" | "computer") => {
+  const player = Player();
+
   const container = document.querySelector(`#${identifier}-container`);
 
   const rowIndexContainer = document.querySelector(
@@ -17,11 +15,9 @@ const View = (identifier: "player" | "computer") => {
     `.${identifier}-column-index-container`,
   );
 
-  const renderBoard = (
-    gameBoard: IBoard,
-    element: Element | null,
-    identifier: string,
-  ) => {
+  const renderBoard = (element: Element | null, identifier: string) => {
+    const gameBoard = player.getPlayerBoard().getBoard();
+
     if (!element) return;
 
     gameBoard.forEach((row, rowIndex) => {
@@ -35,23 +31,21 @@ const View = (identifier: "player" | "computer") => {
     });
   };
 
-  const populateBoard = (
-    placeShip: (
-      coordinateRange: { start: ICoordinate; end: ICoordinate },
-      ship: IShip,
-    ) => void,
-    predeterminedShip: IPredeterminedShip[],
-  ) => {
+  const populateBoard = (predeterminedShip: IPredeterminedShip[]) => {
+    const placeShip = player.getPlayerBoard().placeShip;
+
     predeterminedShip.forEach((currentShip) => {
       placeShip(currentShip.coordinate, currentShip.ship);
     });
   };
 
   const markPlacedShipInBoard = (
-    gameBoard: IBoard,
     identifier: "player" | "computer",
-    getShip: (coordinate: ICoordinate) => BoardItem,
+    isShow?: boolean,
   ) => {
+    const gameBoard = player.getPlayerBoard().getBoard();
+    const getShip = player.getPlayerBoard().getShip;
+
     gameBoard.forEach((row, rowIndex) => {
       row.forEach((_, colIndex) => {
         const currentBoard = getShip([rowIndex, colIndex] as ICoordinate);
@@ -62,8 +56,10 @@ const View = (identifier: "player" | "computer") => {
 
         if (!currentBoard.ship || !currentCell) return;
 
-        currentCell.style.border = "1px solid blue";
-        currentCell.style.opacity = "1";
+        currentCell.style.border = isShow
+          ? "1px solid blue"
+          : "1px solid black";
+        currentCell.style.opacity = isShow ? "1" : "0.15";
       });
     });
   };
@@ -88,22 +84,20 @@ const View = (identifier: "player" | "computer") => {
   };
 
   const populate = () => {
-    const player = Player();
+    renderBoard(container, identifier);
 
-    renderBoard(player.getPlayerBoard().getBoard(), container, identifier);
+    populateBoard(PREDETERMINED_SHIP);
 
-    populateBoard(player.getPlayerBoard().placeShip, PREDETERMINED_SHIP);
-
-    markPlacedShipInBoard(
-      player.getPlayerBoard().getBoard(),
-      identifier,
-      player.getPlayerBoard().getShip,
-    );
+    markPlacedShipInBoard(identifier, true);
 
     addIndexToBoard();
   };
 
-  return { populate };
+  const hideBoard = () => {
+    markPlacedShipInBoard(identifier);
+  };
+
+  return { populate, hideBoard };
 };
 
-export default View;
+export default PlayerView;
