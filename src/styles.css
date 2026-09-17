@@ -12,7 +12,33 @@ main {
 
 .cell {
   border: 1px solid;
-  opacity: 0.25;
+  opacity: 0.15;
   height: 32px;
   width: 32px;
+}
+
+.index-container {
+  display: flex;
+}
+
+#row-index-container {
+  display: grid;
+  grid-template-columns: repeat(10, 34px);
+  width: 340px;
+  text-align: center;
+}
+
+#column-index-container {
+  display: grid;
+  grid-template-rows: repeat(10, 34px);
+  height: 340px;
+  margin-top: 34px;
+}
+
+#column-index-container > span,
+#row-index-container > span {
+  align-content: center;
+  text-align: center;
+  width: 34px;
+  height: 34px;
 }

@@ -7,9 +7,15 @@ import type {
 import type { IPredeterminedShip, IShip } from "../interfaces/ShipInterface.ts";
 import Player from "./Player.ts";
 
-const View = () => {
-  const playerContainer = document.querySelector(`#player-container`);
-  const computerContainer = document.querySelector("#computer-container");
+const View = (identifier: "player" | "computer") => {
+  const container = document.querySelector(`#${identifier}-container`);
+
+  const rowIndexContainer = document.querySelector(
+    `.${identifier}-row-index-container`,
+  );
+  const columnIndexContainer = document.querySelector(
+    `.${identifier}-column-index-container`,
+  );
 
   const renderBoard = (
     gameBoard: IBoard,
@@ -62,33 +68,42 @@ const View = () => {
     });
   };
 
-  const main = () => {
-    const player = Player();
-    const computer = Player();
-
-    renderBoard(player.getPlayerBoard().getBoard(), playerContainer, "player");
-    renderBoard(
-      computer.getPlayerBoard().getBoard(),
-      computerContainer,
-      "computer",
+  const addIndexToBoard = () => {
+    const listOfAlphabet = [...Array(10).keys()].map((utf) =>
+      String.fromCharCode(utf + 65),
     );
 
+    if (!rowIndexContainer || !columnIndexContainer) return;
+
+    listOfAlphabet.map((alphabet, index) => {
+      const alphabetIndex = document.createElement("span");
+      const numberIndex = document.createElement("span");
+
+      alphabetIndex.textContent = `${alphabet}`;
+      numberIndex.textContent = `${index}`;
+
+      rowIndexContainer.appendChild(alphabetIndex);
+      columnIndexContainer.appendChild(numberIndex);
+    });
+  };
+
+  const populate = () => {
+    const player = Player();
+
+    renderBoard(player.getPlayerBoard().getBoard(), container, identifier);
+
     populateBoard(player.getPlayerBoard().placeShip, PREDETERMINED_SHIP);
-    populateBoard(computer.getPlayerBoard().placeShip, PREDETERMINED_SHIP);
 
     markPlacedShipInBoard(
       player.getPlayerBoard().getBoard(),
-      "player",
+      identifier,
       player.getPlayerBoard().getShip,
     );
-    markPlacedShipInBoard(
-      computer.getPlayerBoard().getBoard(),
-      "computer",
-      computer.getPlayerBoard().getShip,
-    );
+
+    addIndexToBoard();
   };
 
-  return { main };
+  return { populate };
 };
 
 export default View;
