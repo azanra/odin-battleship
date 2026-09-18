@@ -114,6 +114,8 @@ const PlayerView = (identifier: "player" | "computer") => {
         if (!currentCell) return;
 
         currentCell.addEventListener("click", () => {
+          if (currentBoard.isAttacked) return;
+
           currentBoard.isAttacked = true;
 
           if (!currentBoard.ship) {
