@@ -1,4 +1,5 @@
 import PREDETERMINED_SHIP from "../constants/predeterminedShip.ts";
+import REVEALED_COORDINATE from "../constants/revealedCoordinate.ts";
 import type { ICoordinate } from "../interfaces/GameBoardInterface.ts";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
 import Player from "./Player.ts";
@@ -49,10 +50,7 @@ const PlayerView = (identifier: "player" | "computer") => {
       row.forEach((_, colIndex) => {
         const currentBoard = getShip([rowIndex, colIndex] as ICoordinate);
 
-        const currentCell = document.querySelector<HTMLElement>(
-          `#${identifier}-row-${rowIndex}-col-${colIndex}`,
-        );
-
+        const currentCell = getCurrentCell(rowIndex, colIndex, identifier);
         if (!currentBoard.ship || !currentCell) return;
 
         currentCell.style.border = isShow
@@ -93,7 +91,17 @@ const PlayerView = (identifier: "player" | "computer") => {
     markPlacedShipInBoard(identifier);
   };
 
-  const addListener = () => {
+  const getCurrentCell = (
+    row: number,
+    col: number,
+    identifier: "player" | "computer",
+  ) => {
+    return document.querySelector<HTMLElement>(
+      `#${identifier}-row-${row}-col-${col}`,
+    );
+  };
+
+  const addListener = (identifier: "player" | "computer") => {
     const gameBoard = player.getPlayerBoard().getBoard();
     const getShip = player.getPlayerBoard().getShip;
 
@@ -101,9 +109,7 @@ const PlayerView = (identifier: "player" | "computer") => {
       row.forEach((_, colIndex) => {
         const currentBoard = getShip([rowIndex, colIndex] as ICoordinate);
 
-        const currentCell = document.querySelector<HTMLElement>(
-          `#${identifier}-row-${rowIndex}-col-${colIndex}`,
-        );
+        const currentCell = getCurrentCell(rowIndex, colIndex, identifier);
 
         if (!currentCell) return;
 
@@ -118,9 +124,45 @@ const PlayerView = (identifier: "player" | "computer") => {
 
           currentBoard.ship.hit();
           currentCell.style.border = "1px solid red";
+
+          revealAdjacentCell(rowIndex, colIndex, identifier);
         });
       });
     });
+  };
+
+  const revealAdjacentCell = (
+    row: number,
+    col: number,
+    identifier: "player" | "computer",
+  ) => {
+    const isInRangeOfCoordinate = player.getPlayerBoard().isInRangeOfCoordinate;
+    const getShip = player.getPlayerBoard().getShip;
+
+    const validRange = {
+      min: 0,
+      max: 9,
+    };
+
+    REVEALED_COORDINATE.map((coordinate) => {
+      return { x: row + coordinate.x, y: col + coordinate.y };
+    })
+      .filter((coordinate) => {
+        return (
+          isInRangeOfCoordinate(coordinate.x, validRange.min, validRange.max) &&
+          isInRangeOfCoordinate(coordinate.y, validRange.min, validRange.max)
+        );
+      })
+      .forEach((cell) => {
+        const currentBoard = getShip([cell.x, cell.y] as ICoordinate);
+        const currentCell = getCurrentCell(cell.x, cell.y, identifier);
+
+        if (!currentCell || currentBoard.ship) return;
+
+        currentBoard.isAttacked = true;
+        currentCell.style.opacity = "1";
+        currentCell.classList.add("missed");
+      });
   };
 
   return { populate, hideBoard, addListener };

@@ -9,7 +9,7 @@ const Controller = () => {
 
     computerView.populate();
     computerView.hideBoard();
-    computerView.addListener();
+    computerView.addListener("computer");
   };
 
   return { startGame };
