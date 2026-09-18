@@ -56,7 +56,7 @@ const PlayerView = (identifier: "player" | "computer") => {
         currentCell.style.border = isShow
           ? "1px solid blue"
           : "1px solid black";
-        currentCell.style.opacity = isShow ? "1" : "0.15";
+        currentCell.style.opacity = isShow ? "0.75" : "0.15";
       });
     });
   };
@@ -115,14 +115,16 @@ const PlayerView = (identifier: "player" | "computer") => {
 
         currentCell.addEventListener("click", () => {
           currentBoard.isAttacked = true;
-          currentCell.style.opacity = "1";
 
           if (!currentBoard.ship) {
             currentCell.classList.add("missed");
+            currentCell.style.opacity = "0.5";
             return;
           }
 
           currentBoard.ship.hit();
+          currentCell.classList.add("attacked");
+          currentCell.style.opacity = "0.75";
           currentCell.style.border = "1px solid red";
 
           revealAdjacentCell(rowIndex, colIndex, identifier);
@@ -161,7 +163,7 @@ const PlayerView = (identifier: "player" | "computer") => {
           return;
 
         currentBoard.isAttacked = true;
-        currentCell.style.opacity = "1";
+        currentCell.style.opacity = "0.5";
         currentCell.classList.add("missed");
       });
   };
