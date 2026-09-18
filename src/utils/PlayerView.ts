@@ -157,7 +157,8 @@ const PlayerView = (identifier: "player" | "computer") => {
         const currentBoard = getShip([cell.x, cell.y] as ICoordinate);
         const currentCell = getCurrentCell(cell.x, cell.y, identifier);
 
-        if (!currentCell || currentBoard.ship) return;
+        if (!currentCell || currentBoard.ship || currentBoard.isAttacked)
+          return;
 
         currentBoard.isAttacked = true;
         currentCell.style.opacity = "1";
