@@ -61,4 +61,16 @@ describe("GameBoard", () => {
     });
     expect(gameBoard.isAllShipsSunk()).toBe(true);
   });
+
+  test("check if number is in range", () => {
+    const range = {
+      min: 2,
+      max: 10,
+    };
+
+    expect(gameBoard.isInRangeOfCoordinate(5, range.min, range.max)).toBe(true);
+    expect(gameBoard.isInRangeOfCoordinate(27, range.min, range.max)).toBe(
+      false,
+    );
+  });
 });

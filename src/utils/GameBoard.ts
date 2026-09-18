@@ -70,7 +70,14 @@ const GameBoard = () => {
     return isAllSunk;
   };
 
-  return { getBoard, getShip, placeShip, receiveAttack, isAllShipsSunk };
+  return {
+    getBoard,
+    getShip,
+    placeShip,
+    receiveAttack,
+    isAllShipsSunk,
+    isInRangeOfCoordinate,
+  };
 };
 
 export default GameBoard;
