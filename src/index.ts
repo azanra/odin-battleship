@@ -1,8 +1,5 @@
 import "./styles.css";
-import View from "./utils/View.ts";
+import Controller from "./utils/Controller.ts";
 
-const playerView = View("player");
-playerView.populate();
-
-const computerView = View("computer");
-computerView.populate();
+const controller = Controller();
+controller.startGame();

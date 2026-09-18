@@ -7,7 +7,6 @@ const PlayerView = (identifier: "player" | "computer") => {
   const player = Player();
 
   const container = document.querySelector(`#${identifier}-container`);
-
   const rowIndexContainer = document.querySelector(
     `.${identifier}-row-index-container`,
   );
@@ -85,11 +84,8 @@ const PlayerView = (identifier: "player" | "computer") => {
 
   const populate = () => {
     renderBoard(container, identifier);
-
     populateBoard(PREDETERMINED_SHIP);
-
     markPlacedShipInBoard(identifier, true);
-
     addIndexToBoard();
   };
 
@@ -97,7 +93,37 @@ const PlayerView = (identifier: "player" | "computer") => {
     markPlacedShipInBoard(identifier);
   };
 
-  return { populate, hideBoard };
+  const addListener = () => {
+    const gameBoard = player.getPlayerBoard().getBoard();
+    const getShip = player.getPlayerBoard().getShip;
+
+    gameBoard.forEach((row, rowIndex) => {
+      row.forEach((_, colIndex) => {
+        const currentBoard = getShip([rowIndex, colIndex] as ICoordinate);
+
+        const currentCell = document.querySelector<HTMLElement>(
+          `#${identifier}-row-${rowIndex}-col-${colIndex}`,
+        );
+
+        if (!currentCell) return;
+
+        currentCell.addEventListener("click", () => {
+          currentBoard.isAttacked = true;
+          currentCell.style.opacity = "1";
+
+          if (!currentBoard.ship) {
+            currentCell.classList.add("missed");
+            return;
+          }
+
+          currentBoard.ship.hit();
+          currentCell.style.border = "1px solid red";
+        });
+      });
+    });
+  };
+
+  return { populate, hideBoard, addListener };
 };
 
 export default PlayerView;
