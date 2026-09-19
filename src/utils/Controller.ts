@@ -1,6 +1,6 @@
 import PlayerView from "./PlayerView.ts";
 
-const Controller = () => {
+const Controller = (() => {
   const playerView = PlayerView("player");
   const computerView = PlayerView("computer");
 
@@ -13,6 +13,6 @@ const Controller = () => {
   };
 
   return { startGame };
-};
+})();
 
 export default Controller;
