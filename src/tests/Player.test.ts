@@ -7,6 +7,22 @@ describe("Player", () => {
 
   test("return an empty game board", () => {
     const emptyGameBoard = GameBoard();
-    expect(player.getBoard()).toEqual(emptyGameBoard.getBoard());
+    expect(player.getPlayerBoard().getBoard()).toEqual(
+      emptyGameBoard.getBoard(),
+    );
+  });
+
+  test("return random coordinate within the board", () => {
+    const { x, y } = player.getRandomCoordinate();
+    const range = {
+      min: 0,
+      max: 9,
+    };
+    const isInRangeOfCoordinate = player.getPlayerBoard().isInRangeOfCoordinate;
+
+    expect(
+      isInRangeOfCoordinate(x, range.min, range.max) &&
+        isInRangeOfCoordinate(y, range.min, range.max),
+    ).toBe(true);
   });
 });
