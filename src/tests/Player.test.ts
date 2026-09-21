@@ -1,7 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import GameBoard from "../utils/GameBoard";
 import Player from "../utils/Player";
-import type { ICoordinate } from "../interfaces/GameBoardInterface";
 
 describe("Player", () => {
   const player = Player();
@@ -27,12 +26,8 @@ describe("Player", () => {
     ).toBe(true);
   });
 
-  describe("random play on the board", () => {
-    test("attack random board without ship in it", () => {
-      const { x, y } = player.randomLegalAttack();
-      expect(
-        player.getPlayerBoard().getShip([x, y] as ICoordinate).isAttacked,
-      ).toBe(true);
-    });
+  test("attack random board without ship in it", () => {
+    const { x, y } = player.randomLegalAttack();
+    expect(player.getPlayerBoard().getShip([x, y]).isAttacked).toBe(true);
   });
 });
