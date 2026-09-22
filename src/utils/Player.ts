@@ -1,4 +1,7 @@
-import type { ICoordinate } from "../interfaces/GameBoardInterface.ts";
+import type {
+  ICoordinate,
+  ShipCoordinateRange,
+} from "../interfaces/GameBoardInterface.ts";
 import type { ILegalCoordinate } from "../interfaces/PlayerInterface.ts";
 import GameBoard from "./GameBoard.ts";
 
@@ -18,8 +21,14 @@ const Player = () => {
     };
 
     return {
-      x: randomNumberOnRange(range.min, range.max),
-      y: randomNumberOnRange(range.min, range.max),
+      x: randomNumberOnRange(
+        range.min,
+        range.max,
+      ) as unknown as ShipCoordinateRange,
+      y: randomNumberOnRange(
+        range.min,
+        range.max,
+      ) as unknown as ShipCoordinateRange,
     };
   };
 
@@ -32,7 +41,7 @@ const Player = () => {
       const randomCoordinate = playerBoard.getShip([
         coordinate.x,
         coordinate.y,
-      ] as ICoordinate);
+      ]);
 
       if (!randomCoordinate.isAttacked) {
         playerBoard.receiveAttack([coordinate.x, coordinate.y] as ICoordinate);

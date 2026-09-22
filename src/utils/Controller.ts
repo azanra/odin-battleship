@@ -1,8 +1,12 @@
+import Player from "./Player.ts";
 import PlayerView from "./PlayerView.ts";
 
 const Controller = (() => {
-  const playerView = PlayerView("player");
-  const computerView = PlayerView("computer");
+  const player = Player();
+  const computer = Player();
+
+  const playerView = PlayerView("player", player);
+  const computerView = PlayerView("computer", computer);
 
   const startGame = () => {
     playerView.populate();

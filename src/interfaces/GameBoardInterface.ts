@@ -29,3 +29,19 @@ export interface IRangeOfCoordinate {
   range: ICoordinate;
   expected: "undefined" | "exist";
 }
+
+export interface IGameBoardInterface {
+  getBoard: () => IBoard;
+  getShip: (coordinate: ICoordinate) => BoardItem;
+  placeShip: (
+    coordinateRange: { start: ICoordinate; end: ICoordinate },
+    ship: IShip,
+  ) => void;
+  receiveAttack: (coordinate: ICoordinate) => void;
+  isAllShipsSunk: () => boolean;
+  isInRangeOfCoordinate: (
+    currentRange: number,
+    min: number,
+    max: number,
+  ) => boolean;
+}

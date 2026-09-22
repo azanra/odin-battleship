@@ -1,12 +1,13 @@
 import PREDETERMINED_SHIP from "../constants/predeterminedShip.ts";
 import REVEALED_COORDINATE from "../constants/revealedCoordinate.ts";
 import type { ICoordinate } from "../interfaces/GameBoardInterface.ts";
+import type { IPlayerInterface } from "../interfaces/PlayerInterface.ts";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
-import Player from "./Player.ts";
 
-const PlayerView = (identifier: "player" | "computer") => {
-  const player = Player();
-
+const PlayerView = (
+  identifier: "player" | "computer",
+  player: IPlayerInterface,
+) => {
   const container = document.querySelector(`#${identifier}-container`);
   const rowIndexContainer = document.querySelector(
     `.${identifier}-row-index-container`,
