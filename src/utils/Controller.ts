@@ -13,7 +13,21 @@ const Controller = (() => {
 
     computerView.populate();
     computerView.hideBoard();
-    computerView.addListener("computer");
+    computerView.addListener("computer", () => computerTurn());
+  };
+
+  const computerTurn = () => {
+    const { x, y } = player.randomLegalAttack();
+    playerView.updateBoardAfterAttack(
+      x,
+      y,
+      () => {
+        computerView.disableButton(false);
+      },
+      () => {
+        computerTurn();
+      },
+    );
   };
 
   return { startGame };

@@ -1,6 +1,9 @@
 import PREDETERMINED_SHIP from "../constants/predeterminedShip.ts";
 import REVEALED_COORDINATE from "../constants/revealedCoordinate.ts";
-import type { ICoordinate } from "../interfaces/GameBoardInterface.ts";
+import type {
+  ICoordinate,
+  ShipCoordinateRange,
+} from "../interfaces/GameBoardInterface.ts";
 import type { IPlayerInterface } from "../interfaces/PlayerInterface.ts";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
 
@@ -23,7 +26,7 @@ const PlayerView = (
 
     gameBoard.forEach((row, rowIndex) => {
       row.forEach((_, colIndex) => {
-        const currentBoard = document.createElement("div");
+        const currentBoard = document.createElement("button");
         currentBoard.id = `${identifier}-row-${rowIndex}-col-${colIndex}`;
         currentBoard.className = "cell";
 
@@ -42,7 +45,7 @@ const PlayerView = (
 
   const markPlacedShipInBoard = (
     identifier: "player" | "computer",
-    isShow?: boolean,
+    isShow = false,
   ) => {
     const gameBoard = player.getPlayerBoard().getBoard();
     const getShip = player.getPlayerBoard().getShip;
@@ -102,14 +105,16 @@ const PlayerView = (
     );
   };
 
-  const addListener = (identifier: "player" | "computer") => {
+  const addListener = (
+    identifier: "player" | "computer",
+    callback: () => void,
+  ) => {
     const gameBoard = player.getPlayerBoard().getBoard();
     const getShip = player.getPlayerBoard().getShip;
 
     gameBoard.forEach((row, rowIndex) => {
       row.forEach((_, colIndex) => {
         const currentBoard = getShip([rowIndex, colIndex] as ICoordinate);
-
         const currentCell = getCurrentCell(rowIndex, colIndex, identifier);
 
         if (!currentCell) return;
@@ -117,23 +122,53 @@ const PlayerView = (
         currentCell.addEventListener("click", () => {
           if (currentBoard.isAttacked) return;
 
-          currentBoard.isAttacked = true;
+          player
+            .getPlayerBoard()
+            .receiveAttack([rowIndex, colIndex] as ICoordinate);
 
-          if (!currentBoard.ship) {
-            currentCell.classList.add("missed");
-            currentCell.style.opacity = "0.5";
-            return;
-          }
-
-          currentBoard.ship.hit();
-          currentCell.classList.add("attacked");
-          currentCell.style.opacity = "0.75";
-          currentCell.style.border = "1px solid red";
-
-          revealAdjacentCell(rowIndex, colIndex, identifier);
+          updateBoardAfterAttack(
+            rowIndex as ShipCoordinateRange,
+            colIndex as ShipCoordinateRange,
+            () => {
+              disableButton();
+              callback();
+            },
+            () => {},
+          );
         });
       });
     });
+  };
+
+  const updateBoardAfterAttack = (
+    rowIndex: ShipCoordinateRange,
+    colIndex: ShipCoordinateRange,
+    missCallback: () => void,
+    hitCallback: () => void,
+  ) => {
+    const getShip = player.getPlayerBoard().getShip;
+
+    const currentBoard = getShip([rowIndex, colIndex]);
+    const currentCell = getCurrentCell(rowIndex, colIndex, identifier);
+
+    if (!currentCell) return;
+
+    if (!currentBoard.ship) {
+      currentCell.classList.add("missed");
+      currentCell.style.opacity = "0.5";
+
+      missCallback();
+
+      return;
+    }
+
+    currentCell.classList.add("attacked");
+    currentCell.style.opacity = "0.75";
+    currentCell.style.border = "1px solid red";
+
+    revealAdjacentCell(rowIndex, colIndex, identifier);
+
+    hitCallback();
   };
 
   const revealAdjacentCell = (
@@ -171,7 +206,36 @@ const PlayerView = (
       });
   };
 
-  return { populate, hideBoard, addListener };
+  const disableButton = (isDisabled = true) => {
+    const gameBoard = player.getPlayerBoard().getBoard();
+
+    gameBoard.forEach((row, rowIndex) => {
+      row.forEach((_, colIndex) => {
+        const currentCell = document.querySelector<HTMLButtonElement>(
+          `#${identifier}-row-${rowIndex}-col-${colIndex}`,
+        );
+
+        if (!currentCell) return;
+
+        currentCell.disabled = isDisabled;
+
+        if (isDisabled) {
+          currentCell.style.border = "1px solid";
+          return;
+        }
+      });
+    });
+  };
+
+  return {
+    populate,
+    hideBoard,
+    addListener,
+    disableButton,
+    markPlacedShipInBoard,
+    getCurrentCell,
+    updateBoardAfterAttack,
+  };
 };
 
 export default PlayerView;
