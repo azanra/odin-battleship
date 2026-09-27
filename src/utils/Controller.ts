@@ -13,7 +13,9 @@ const Controller = (() => {
 
     computerView.populate();
     computerView.hideBoard();
-    computerView.addListener("computer", () => computerTurn());
+    computerView.addListener("computer", () =>
+      setTimeout(() => computerTurn(), 2000),
+    );
   };
 
   const computerTurn = () => {
@@ -25,7 +27,7 @@ const Controller = (() => {
         computerView.disableButton(false);
       },
       () => {
-        computerTurn();
+        setTimeout(() => computerTurn(), 2000);
       },
     );
   };
