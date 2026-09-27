@@ -9,7 +9,9 @@ const Ship = (currentLength: number) => {
 
   const getHit = () => hitAmount;
 
-  const isSunk = () => hitAmount === length;
+  // Getter value will differ with variable if
+  // Accessed outside of the factory
+  const isSunk = () => getHit() === length;
 
   return { hit, getHit, isSunk };
 };
