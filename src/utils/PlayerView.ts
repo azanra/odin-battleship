@@ -86,7 +86,7 @@ const PlayerView = (
 
   const populate = () => {
     renderBoard(container, identifier);
-    populateBoard(PREDETERMINED_SHIP);
+    populateBoard(PREDETERMINED_SHIP().ship);
     markPlacedShipInBoard(identifier, true);
     addIndexToBoard();
   };
