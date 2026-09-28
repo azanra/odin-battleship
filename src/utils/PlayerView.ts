@@ -107,7 +107,8 @@ const PlayerView = (
 
   const addListener = (
     identifier: "player" | "computer",
-    callback: () => void,
+    missCallback: () => void,
+    hitCallback: () => void,
   ) => {
     const gameBoard = player.getPlayerBoard().getBoard();
     const getShip = player.getPlayerBoard().getShip;
@@ -131,9 +132,11 @@ const PlayerView = (
             colIndex as ShipCoordinateRange,
             () => {
               disableButton();
-              callback();
+              missCallback();
             },
-            () => {},
+            () => {
+              hitCallback();
+            },
           );
         });
       });
@@ -227,6 +230,12 @@ const PlayerView = (
     });
   };
 
+  const resetGameBoard = () => {
+    container?.replaceChildren();
+    rowIndexContainer?.replaceChildren();
+    columnIndexContainer?.replaceChildren();
+  };
+
   return {
     populate,
     hideBoard,
@@ -235,6 +244,7 @@ const PlayerView = (
     markPlacedShipInBoard,
     getCurrentCell,
     updateBoardAfterAttack,
+    resetGameBoard,
   };
 };
 
