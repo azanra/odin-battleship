@@ -30,4 +30,11 @@ describe("Player", () => {
     const { x, y } = player.randomLegalAttack();
     expect(player.getPlayerBoard().getShip([x, y]).isAttacked).toBe(true);
   });
+
+  test("reset game board", () => {
+    const emptyGameBoard = GameBoard();
+    expect(player.getPlayerBoard().resetBoard()).toEqual(
+      emptyGameBoard.getBoard(),
+    );
+  });
 });
