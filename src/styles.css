@@ -62,3 +62,13 @@ main {
   color: red;
   font-size: 16px;
 }
+
+.action-option {
+  margin-top: 64px;
+}
+
+#game-action {
+  margin-top: 128px;
+  display: flex;
+  justify-content: center;
+}

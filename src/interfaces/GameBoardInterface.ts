@@ -44,4 +44,5 @@ export interface IGameBoardInterface {
     min: number,
     max: number,
   ) => boolean;
+  resetBoard: () => void;
 }

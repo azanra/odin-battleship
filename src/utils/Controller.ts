@@ -8,16 +8,28 @@ const Controller = (() => {
   const playerView = PlayerView("player", player);
   const computerView = PlayerView("computer", computer);
 
+  const startGameButton = document.querySelector("#game-action");
+
   const startGame = () => {
+    if (!startGameButton) return;
+
     playerView.populate();
+    playerView.randomAddListener();
 
     computerView.populate();
+    computerView.randomAddListener();
     computerView.hideBoard();
-    computerView.addListener(
-      "computer",
-      () => setTimeout(() => computerTurn(), 2000),
-      () => checkIsGameEnding(),
-    );
+
+    startGameButton.addEventListener("click", () => {
+      playerView.disableRandomizerButton(true);
+      computerView.disableRandomizerButton(true);
+
+      computerView.addListener(
+        "computer",
+        () => setTimeout(() => computerTurn(), 2000),
+        () => checkIsGameEnding(),
+      );
+    });
   };
 
   const computerTurn = () => {
@@ -45,6 +57,8 @@ const Controller = (() => {
 
       playerView.resetGameBoard();
       computerView.resetGameBoard();
+      playerView.disableRandomizerButton();
+      computerView.disableRandomizerButton();
 
       startGame();
 

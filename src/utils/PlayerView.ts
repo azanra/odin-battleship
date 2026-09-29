@@ -18,6 +18,9 @@ const PlayerView = (
   const columnIndexContainer = document.querySelector(
     `.${identifier}-column-index-container`,
   );
+  const randomButton = document.querySelector<HTMLButtonElement>(
+    `#${identifier}-action-randomize`,
+  );
 
   const renderBoard = (element: Element | null, identifier: string) => {
     const gameBoard = player.getPlayerBoard().getBoard();
@@ -86,7 +89,7 @@ const PlayerView = (
 
   const populate = () => {
     renderBoard(container, identifier);
-    populateBoard(PREDETERMINED_SHIP().ship);
+    populateBoard(PREDETERMINED_SHIP().randomizeShipCoordinate());
     markPlacedShipInBoard(identifier, true);
     addIndexToBoard();
   };
@@ -234,6 +237,22 @@ const PlayerView = (
     container?.replaceChildren();
     rowIndexContainer?.replaceChildren();
     columnIndexContainer?.replaceChildren();
+    player.getPlayerBoard().resetBoard();
+  };
+
+  const randomAddListener = () => {
+    if (!randomButton) return;
+
+    randomButton.addEventListener("click", () => {
+      resetGameBoard();
+      populate();
+    });
+  };
+
+  const disableRandomizerButton = (isDisabled = false) => {
+    if (!randomButton) return;
+
+    randomButton.disabled = isDisabled;
   };
 
   return {
@@ -245,6 +264,8 @@ const PlayerView = (
     getCurrentCell,
     updateBoardAfterAttack,
     resetGameBoard,
+    randomAddListener,
+    disableRandomizerButton,
   };
 };
 

@@ -2,11 +2,17 @@ import type { IBoard, ICoordinate } from "../interfaces/GameBoardInterface.ts";
 import type { IShip } from "../interfaces/ShipInterface.ts";
 
 const GameBoard = () => {
-  const gameBoard = Array.from(new Array(10), () =>
+  let gameBoard = Array.from(new Array(10), () =>
     [...new Array(10)].map(() => ({ ship: undefined, isAttacked: false })),
   ) as IBoard;
 
   const getBoard = () => gameBoard;
+
+  const resetBoard = () => {
+    gameBoard = Array.from(new Array(10), () =>
+      [...new Array(10)].map(() => ({ ship: undefined, isAttacked: false })),
+    ) as IBoard;
+  };
 
   const getShip = (coordinate: ICoordinate) => {
     const [x, y] = coordinate;
@@ -77,6 +83,7 @@ const GameBoard = () => {
     receiveAttack,
     isAllShipsSunk,
     isInRangeOfCoordinate,
+    resetBoard,
   };
 };
 
