@@ -33,7 +33,9 @@ describe("Player", () => {
 
   test("reset game board", () => {
     const emptyGameBoard = GameBoard();
-    expect(player.getPlayerBoard().resetBoard()).toEqual(
+    player.getPlayerBoard().resetBoard();
+
+    expect(player.getPlayerBoard().getBoard()).toEqual(
       emptyGameBoard.getBoard(),
     );
   });
