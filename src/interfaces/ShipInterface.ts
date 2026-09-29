@@ -13,4 +13,5 @@ export interface IPredeterminedShip {
     start: ICoordinate;
     end: ICoordinate;
   };
+  length: number;
 }
