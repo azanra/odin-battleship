@@ -37,5 +37,42 @@ describe("Predetermined Ship", () => {
         ).toBe(true);
       });
     });
+
+    test("create range of coordinate from start and end coordinate", () => {
+      const createRange = PREDETERMINED_SHIP().createRange;
+
+      const horizontalRange: IPredeterminedShip["coordinate"] = {
+        start: [3, 3],
+        end: [3, 7],
+      };
+
+      const horizontalResult = [
+        [3, 3],
+        [3, 4],
+        [3, 5],
+        [3, 6],
+        [3, 7],
+      ];
+
+      const verticalRange: IPredeterminedShip["coordinate"] = {
+        start: [6, 9],
+        end: [9, 9],
+      };
+
+      const verticalResult = [
+        [6, 9],
+        [7, 9],
+        [8, 9],
+        [9, 9],
+      ];
+
+      expect(createRange(horizontalRange.start, horizontalRange.end)).toEqual(
+        horizontalResult,
+      );
+
+      expect(createRange(verticalRange.start, verticalRange.end)).toEqual(
+        verticalResult,
+      );
+    });
   });
 });
