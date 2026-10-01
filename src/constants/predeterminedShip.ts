@@ -43,6 +43,7 @@ const PREDETERMINED_SHIP = () => {
 
     const startList: ICoordinate[] = [];
     const endList: ICoordinate[] = [];
+    let allCoordinate: ICoordinate[] = [];
 
     return ship.map((individualShip) => {
       let isUnique = false;
@@ -55,13 +56,18 @@ const PREDETERMINED_SHIP = () => {
 
         const startItem = destructIntoArray(randomStartCoordinate);
         const endItem = destructIntoArray(randomEndCoordinate);
+        const rangeOfCoordinate = createRange(startItem, endItem);
 
         if (
           !checkIfArrayContain(startList, startItem) &&
           !checkIfArrayContain(endList, endItem) &&
           isEitherHorizontalOrVertical(startItem, endItem) &&
-          isEqualToShipSize(startItem, endItem, individualShip.length)
+          isEqualToShipSize(startItem, endItem, individualShip.length) &&
+          rangeOfCoordinate.every(
+            (item) => !checkIfArrayContain(allCoordinate, item),
+          )
         ) {
+          allCoordinate = [...allCoordinate, ...rangeOfCoordinate];
           startList.push(startItem);
           endList.push(endItem);
 
@@ -80,6 +86,25 @@ const PREDETERMINED_SHIP = () => {
         },
       };
     });
+  };
+
+  const createRange = (start: ICoordinate, end: ICoordinate) => {
+    const rangeOfCoordinate: ICoordinate[] = [];
+
+    const isHorizontal = start[0] === end[0];
+
+    const initialization = start[isHorizontal ? 1 : 0];
+    const condition = end[isHorizontal ? 1 : 0];
+
+    for (let i = initialization; i <= condition; i++) {
+      const coordinateItem: ICoordinate = isHorizontal
+        ? [start[0], i]
+        : [i, start[1]];
+
+      rangeOfCoordinate.push(coordinateItem);
+    }
+
+    return rangeOfCoordinate;
   };
 
   const checkIfArrayContain = (
@@ -114,7 +139,7 @@ const PREDETERMINED_SHIP = () => {
     );
   };
 
-  return { ship, randomizeShipCoordinate };
+  return { ship, randomizeShipCoordinate, checkIfArrayContain, createRange };
 };
 
 export default PREDETERMINED_SHIP;

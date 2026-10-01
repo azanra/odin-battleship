@@ -1,7 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import PREDETERMINED_SHIP from "../constants/predeterminedShip";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface";
-import type { ICoordinate } from "../interfaces/GameBoardInterface";
 
 describe("Predetermined Ship", () => {
   describe("randomize coordinate in horizontally or vertically", () => {
