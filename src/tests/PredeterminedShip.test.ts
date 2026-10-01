@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import PREDETERMINED_SHIP from "../constants/predeterminedShip";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface";
+import type { ICoordinate } from "../interfaces/GameBoardInterface";
 
 describe("Predetermined Ship", () => {
   describe("randomize coordinate in horizontally or vertically", () => {
@@ -21,6 +22,25 @@ describe("Predetermined Ship", () => {
       );
 
       expect(listOfStart.size === 5 && listOfEnd.size === 5).toBe(true);
+    });
+
+    test("coordinate not colliding with each other", () => {
+      const createRange = PREDETERMINED_SHIP().createRange;
+      let rangeOfCoordinate: string[] = [];
+
+      randomizedCoordinate.forEach((item) => {
+        const { coordinate } = item;
+        const itemRange = createRange(coordinate.start, coordinate.end).map(
+          (item) => JSON.stringify(item),
+        );
+
+        rangeOfCoordinate = [...rangeOfCoordinate, ...itemRange];
+      });
+
+      const uniqueCoordinate = new Set(rangeOfCoordinate);
+      const SHIP_LENGTH_TOTAL_SIZE = 17;
+
+      expect(uniqueCoordinate.size).toBe(SHIP_LENGTH_TOTAL_SIZE);
     });
 
     randomizedCoordinate.forEach((shipCoordinate) => {
