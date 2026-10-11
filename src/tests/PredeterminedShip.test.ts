@@ -2,6 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import PREDETERMINED_SHIP from "../constants/predeterminedShip";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface";
 import type {
+  IAdjacent,
   ICoordinate,
   ShipCoordinateRange,
 } from "../interfaces/GameBoardInterface";
@@ -46,102 +47,77 @@ describe("Predetermined Ship", () => {
       expect(uniqueCoordinate.size).toBe(SHIP_LENGTH_TOTAL_SIZE);
     });
 
+    test("create adjacent position coordinate", () => {
+      const createNextRange = PREDETERMINED_SHIP().createNextRange;
+      const createRange = PREDETERMINED_SHIP().createRange;
+
+      const coordinate: IAdjacent = {
+        horizontal: {
+          position: { start: [3, 3], end: [3, 7] },
+          expect: [
+            [2, 2],
+            [2, 3],
+            [2, 4],
+            [2, 5],
+            [2, 6],
+            [2, 7],
+            [2, 8],
+            [3, 2],
+            [3, 3],
+            [3, 4],
+            [3, 5],
+            [3, 6],
+            [3, 7],
+            [3, 8],
+            [4, 2],
+            [4, 3],
+            [4, 4],
+            [4, 5],
+            [4, 6],
+            [4, 7],
+            [4, 8],
+          ],
+        },
+        vertical: {
+          position: { start: [6, 9], end: [9, 9] },
+          expect: [
+            [4, 2],
+            [4, 3],
+            [4, 4],
+            [5, 2],
+            [5, 3],
+            [5, 4],
+            [6, 2],
+            [6, 3],
+            [6, 4],
+            [7, 2],
+            [7, 3],
+            [7, 4],
+            [8, 2],
+            [8, 3],
+            [8, 4],
+          ],
+        },
+      };
+
+      const { horizontal, vertical } = coordinate;
+      const horizontalRange = createRange(
+        horizontal.position.start,
+        horizontal.position.end,
+      );
+      const verticalRange = createRange(
+        vertical.position.start,
+        vertical.position.end,
+      );
+
+      expect(createNextRange(horizontalRange)).toEqual(horizontal.expect);
+      expect(createNextRange(verticalRange)).toEqual(vertical.expect);
+    });
+
     test("coordinate is not position adjacent to each other", () => {
       const createRange = PREDETERMINED_SHIP().createRange;
       const checkIfArrayContain = PREDETERMINED_SHIP().checkIfArrayContain;
-
-      const getNextFirstAndLastPosition = (
-        currentCoordinate: ICoordinate,
-        isLast: boolean,
-        isHorizontal: boolean,
-      ): ICoordinate => {
-        if (isHorizontal) {
-          return isLast
-            ? [
-                (currentCoordinate[0] + 1) as unknown as ShipCoordinateRange,
-                currentCoordinate[1],
-              ]
-            : [
-                (currentCoordinate[0] - 1) as unknown as ShipCoordinateRange,
-                currentCoordinate[1],
-              ];
-        }
-
-        return isLast
-          ? [
-              currentCoordinate[0],
-              (currentCoordinate[1] + 1) as unknown as ShipCoordinateRange,
-            ]
-          : [
-              currentCoordinate[0],
-              (currentCoordinate[1] - 1) as unknown as ShipCoordinateRange,
-            ];
-      };
-
-      let nextVerticalCoordinate: ICoordinate[] = [];
-
-      randomizedCoordinate.forEach((item) => {
-        const { coordinate } = item;
-        const currentRange = createRange(coordinate.start, coordinate.end);
-
-        const isHorizontal = coordinate.start[0] === coordinate.end[0];
-
-        const firstCoordinate = currentRange[0];
-        const lastCoordinate = currentRange[currentRange.length - 1];
-
-        if (!firstCoordinate || !lastCoordinate) return;
-
-        const nextToFirstCoordinate = getNextFirstAndLastPosition(
-          firstCoordinate,
-          false,
-          isHorizontal,
-        );
-
-        const nextToLastCoordinate = getNextFirstAndLastPosition(
-          lastCoordinate,
-          true,
-          isHorizontal,
-        );
-
-        currentRange.forEach((range) => {
-          if (isHorizontal) {
-            const upperCoordinate: ICoordinate = [
-              range[0],
-              (range[1] - 1) as unknown as ShipCoordinateRange,
-            ];
-            const lowerCoordinate: ICoordinate = [
-              range[0],
-              (range[1] + 1) as unknown as ShipCoordinateRange,
-            ];
-
-            nextVerticalCoordinate = [
-              ...nextVerticalCoordinate,
-              lowerCoordinate,
-              upperCoordinate,
-            ];
-          }
-          const leftCoordinate: ICoordinate = [
-            (range[0] - 1) as unknown as ShipCoordinateRange,
-            range[1],
-          ];
-          const rightCoordinate: ICoordinate = [
-            (range[0] + 1) as unknown as ShipCoordinateRange,
-            range[1],
-          ];
-
-          nextVerticalCoordinate = [
-            ...nextVerticalCoordinate,
-            leftCoordinate,
-            rightCoordinate,
-          ];
-        });
-
-        nextVerticalCoordinate = [
-          ...nextVerticalCoordinate,
-          nextToFirstCoordinate,
-          nextToLastCoordinate,
-        ];
-      });
+      const createNextRange = PREDETERMINED_SHIP().createNextRange;
 
       const randomCoordinate = randomizedCoordinate
         .map((item) => {
@@ -150,8 +126,17 @@ describe("Predetermined Ship", () => {
         })
         .flat();
 
-      nextVerticalCoordinate.forEach((item) => {
-        expect(checkIfArrayContain(randomCoordinate, item)).toBe(false);
+      randomizedCoordinate.forEach((item) => {
+        const { coordinate } = item;
+        const range = createRange(coordinate.start, coordinate.end);
+
+        const nextRange = createNextRange(range);
+
+        if (!nextRange) return;
+
+        nextRange.forEach((item) => {
+          expect(checkIfArrayContain(randomCoordinate, item));
+        });
       });
     });
 

@@ -30,6 +30,19 @@ export interface IRangeOfCoordinate {
   expected: "undefined" | "exist";
 }
 
+interface IAxisAdjacent {
+  position: {
+    start: ICoordinate;
+    end: ICoordinate;
+  };
+  expect: ICoordinate[];
+}
+
+export interface IAdjacent {
+  horizontal: IAxisAdjacent;
+  vertical: IAxisAdjacent;
+}
+
 export interface IGameBoardInterface {
   getBoard: () => IBoard;
   getShip: (coordinate: ICoordinate) => BoardItem;
