@@ -1,11 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import PREDETERMINED_SHIP from "../constants/predeterminedShip";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface";
-import type {
-  IAdjacent,
-  ICoordinate,
-  ShipCoordinateRange,
-} from "../interfaces/GameBoardInterface";
+import type { IAdjacent, ICoordinate } from "../interfaces/GameBoardInterface";
 
 describe("Predetermined Ship", () => {
   describe("randomize coordinate in horizontally or vertically", () => {
@@ -49,7 +45,6 @@ describe("Predetermined Ship", () => {
 
     test("create adjacent position coordinate", () => {
       const createNextRange = PREDETERMINED_SHIP().createNextRange;
-      const createRange = PREDETERMINED_SHIP().createRange;
 
       const coordinate: IAdjacent = {
         horizontal: {
@@ -62,13 +57,6 @@ describe("Predetermined Ship", () => {
             [2, 6],
             [2, 7],
             [2, 8],
-            [3, 2],
-            [3, 3],
-            [3, 4],
-            [3, 5],
-            [3, 6],
-            [3, 7],
-            [3, 8],
             [4, 2],
             [4, 3],
             [4, 4],
@@ -76,42 +64,33 @@ describe("Predetermined Ship", () => {
             [4, 6],
             [4, 7],
             [4, 8],
+            [3, 2],
+            [3, 8],
           ],
         },
         vertical: {
-          position: { start: [6, 9], end: [9, 9] },
+          position: { start: [5, 2], end: [7, 2] },
           expect: [
-            [4, 2],
+            [4, 1],
+            [5, 1],
+            [6, 1],
+            [7, 1],
+            [8, 1],
             [4, 3],
-            [4, 4],
-            [5, 2],
             [5, 3],
-            [5, 4],
-            [6, 2],
             [6, 3],
-            [6, 4],
-            [7, 2],
             [7, 3],
-            [7, 4],
-            [8, 2],
             [8, 3],
-            [8, 4],
+            [4, 2],
+            [8, 2],
           ],
         },
       };
 
       const { horizontal, vertical } = coordinate;
-      const horizontalRange = createRange(
-        horizontal.position.start,
-        horizontal.position.end,
-      );
-      const verticalRange = createRange(
-        vertical.position.start,
-        vertical.position.end,
-      );
 
-      expect(createNextRange(horizontalRange)).toEqual(horizontal.expect);
-      expect(createNextRange(verticalRange)).toEqual(vertical.expect);
+      expect(createNextRange(horizontal.position)).toEqual(horizontal.expect);
+      expect(createNextRange(vertical.position)).toEqual(vertical.expect);
     });
 
     test("coordinate is not position adjacent to each other", () => {
@@ -128,14 +107,15 @@ describe("Predetermined Ship", () => {
 
       randomizedCoordinate.forEach((item) => {
         const { coordinate } = item;
-        const range = createRange(coordinate.start, coordinate.end);
 
-        const nextRange = createNextRange(range);
+        const nextRange = createNextRange(coordinate);
 
         if (!nextRange) return;
 
-        nextRange.forEach((item) => {
-          expect(checkIfArrayContain(randomCoordinate, item));
+        nextRange.forEach((nextItem) => {
+          expect(
+            checkIfArrayContain(randomCoordinate, nextItem as ICoordinate),
+          ).toBe(false);
         });
       });
     });
