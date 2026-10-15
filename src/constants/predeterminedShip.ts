@@ -3,8 +3,10 @@ import type { ILegalCoordinate } from "../interfaces/PlayerInterface.ts";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
 import Player from "../utils/Player.ts";
 import Ship from "../utils/Ship.ts";
+import { HORIZONTAL_NEXT_RANGE, VERTICAL_NEXT_RANGE } from "./nextRange.ts";
 
 const PREDETERMINED_SHIP = () => {
+  // Coordinate is row and col on two dimensional array, not x and y axis
   const ship: IPredeterminedShip[] = [
     {
       name: "Carrier",
@@ -57,7 +59,8 @@ const PREDETERMINED_SHIP = () => {
         const startItem = destructIntoArray(randomStartCoordinate);
         const endItem = destructIntoArray(randomEndCoordinate);
         const rangeOfCoordinate = createRange(startItem, endItem);
-
+        const nextRange = createNextRange({ start: startItem, end: endItem });
+        console.log({ nextRange });
         if (
           !checkIfArrayContain(startList, startItem) &&
           !checkIfArrayContain(endList, endItem) &&
@@ -65,6 +68,9 @@ const PREDETERMINED_SHIP = () => {
           isEqualToShipSize(startItem, endItem, individualShip.length) &&
           rangeOfCoordinate.every(
             (item) => !checkIfArrayContain(allCoordinate, item),
+          ) &&
+          nextRange.every(
+            (item) => !checkIfArrayContain(allCoordinate, item as ICoordinate),
           )
         ) {
           allCoordinate = [...allCoordinate, ...rangeOfCoordinate];
@@ -139,7 +145,64 @@ const PREDETERMINED_SHIP = () => {
     );
   };
 
-  return { ship, randomizeShipCoordinate, checkIfArrayContain, createRange };
+  const createNextRange = (
+    currentPosition: IPredeterminedShip["coordinate"],
+  ) => {
+    const { start: positionStart, end: positionEnd } = currentPosition;
+
+    const isHorizontal = positionStart[0] === positionEnd[0];
+
+    if (isHorizontal) {
+      return [
+        ...HORIZONTAL_NEXT_RANGE.map((range) => {
+          const { start, end } = range;
+
+          const nextCoordinate = {
+            start: [
+              positionStart[0] + start[0],
+              positionStart[1] + start[1],
+            ] as ICoordinate,
+            end: [
+              positionEnd[0] + end[0],
+              positionEnd[1] + end[1],
+            ] as ICoordinate,
+          };
+
+          return createRange(nextCoordinate.start, nextCoordinate.end);
+        }).flat(),
+        [positionStart[0], positionStart[1] - 1],
+        [positionEnd[0], positionEnd[1] + 1],
+      ];
+    }
+    return [
+      ...VERTICAL_NEXT_RANGE.map((range) => {
+        const { start, end } = range;
+
+        const nextCoordinate = {
+          start: [
+            positionStart[0] + start[0],
+            positionStart[1] + start[1],
+          ] as ICoordinate,
+          end: [
+            positionEnd[0] + end[0],
+            positionEnd[1] + end[1],
+          ] as ICoordinate,
+        };
+
+        return createRange(nextCoordinate.start, nextCoordinate.end);
+      }).flat(),
+      [positionStart[0] - 1, positionStart[1]],
+      [positionEnd[0] + 1, positionEnd[1]],
+    ];
+  };
+
+  return {
+    ship,
+    randomizeShipCoordinate,
+    createRange,
+    checkIfArrayContain,
+    createNextRange,
+  };
 };
 
 export default PREDETERMINED_SHIP;

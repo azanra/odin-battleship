@@ -30,6 +30,13 @@ export interface IRangeOfCoordinate {
   expected: "undefined" | "exist";
 }
 
+type NextRangeIncrement = -1 | 0 | 1;
+
+export interface NextRange {
+  start: [NextRangeIncrement, NextRangeIncrement];
+  end: [NextRangeIncrement, NextRangeIncrement];
+}
+
 interface IAxisAdjacent {
   position: {
     start: ICoordinate;
