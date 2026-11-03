@@ -60,7 +60,7 @@ const PREDETERMINED_SHIP = () => {
         const endItem = destructIntoArray(randomEndCoordinate);
         const rangeOfCoordinate = createRange(startItem, endItem);
         const nextRange = createNextRange({ start: startItem, end: endItem });
-        console.log({ nextRange });
+
         if (
           !checkIfArrayContain(startList, startItem) &&
           !checkIfArrayContain(endList, endItem) &&

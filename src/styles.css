@@ -65,10 +65,40 @@ main {
 
 .action-option {
   margin-top: 64px;
+  display: flex;
+  gap: 32px;
 }
 
 #game-action {
   margin-top: 128px;
   display: flex;
   justify-content: center;
+}
+
+.ship-predetermined {
+  height: 32px;
+  border: 1px solid blue;
+  text-align: center;
+  padding: 0px 12px;
+}
+
+#ship-position-area {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.valid-location {
+  border: 1px solid blue;
+  background-color: blue;
+  width: 32px;
+  height: 32px;
+}
+
+.not-valid-location {
+  border: 1px solid red;
+  background-color: red;
+  width: 32px;
+  height: 32px;
 }
