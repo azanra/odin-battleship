@@ -16,6 +16,7 @@ const Controller = (() => {
     playerView.populate();
     playerView.randomAddListener();
     playerView.positionListener();
+    playerView.axisListener();
 
     computerView.populate();
     computerView.randomAddListener();

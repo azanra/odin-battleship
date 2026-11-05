@@ -26,6 +26,11 @@ const PlayerView = (
     `#${identifier}-action-position`,
   );
   const shipArea = document.querySelector("#ship-position-area");
+  const axisButton = document.querySelector<HTMLButtonElement>(
+    `#${identifier}-axis-action`,
+  );
+
+  let isHorizontal = true;
 
   const renderBoard = (element: Element | null, identifier: string) => {
     const gameBoard = player.getPlayerBoard().getBoard();
@@ -278,6 +283,15 @@ const PlayerView = (
     });
   };
 
+  const axisListener = () => {
+    if (!axisButton) return;
+
+    axisButton.addEventListener("click", () => {
+      isHorizontal = !isHorizontal;
+      axisButton.textContent = isHorizontal ? "Horizontal" : "Vertical";
+    });
+  };
+
   const populateDraggableShip = (enemyArea: HTMLElement, shipArea: Element) => {
     enemyArea.style.display = "none";
 
@@ -346,9 +360,13 @@ const PlayerView = (
         const row = Number(currentId.split("-")[2]);
         const column = Number(currentId.split("-")[4]);
 
-        for (let i = column; i < column + length; i++) {
+        const counter = isHorizontal ? column : row;
+
+        for (let i = counter; i < counter + length; i++) {
           const nextItem = document.querySelector(
-            `#${identifier}-row-${row}-col-${i}`,
+            isHorizontal
+              ? `#${identifier}-row-${row}-col-${i}`
+              : `#${identifier}-row-${i}-col-${column}`,
           );
 
           if (!nextItem) {
@@ -447,6 +465,7 @@ const PlayerView = (
     randomAddListener,
     disableRandomizerButton,
     positionListener,
+    axisListener,
   };
 };
 
