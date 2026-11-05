@@ -6,6 +6,7 @@ import type {
 } from "../interfaces/GameBoardInterface.ts";
 import type { IPlayerInterface } from "../interfaces/PlayerInterface.ts";
 import type { IPredeterminedShip } from "../interfaces/ShipInterface.ts";
+import Ship from "./Ship.ts";
 
 const PlayerView = (
   identifier: "player" | "computer",
@@ -290,7 +291,7 @@ const PlayerView = (
       shipContainer.addEventListener("dragstart", (event: Event) => {
         if (isDragEvent(event, "dragstart") && event.dataTransfer) {
           event.dataTransfer.effectAllowed = "move";
-          event.dataTransfer.setData("ship", JSON.stringify(length));
+          event.dataTransfer.setData("ship", `${name}-${length}`);
           shipContainer.id = "dragged-ship";
         }
       });
@@ -386,12 +387,49 @@ const PlayerView = (
 
         if (isDragEvent(event, "drop") && event.target) {
           event.preventDefault();
-          const data = event.dataTransfer?.getData("ship");
-          const draggedShip = document.querySelector("#dragged-ship");
 
-          if (!data || !draggedShip) return;
+          const draggedShip = document.querySelector("#dragged-ship");
+          const length = draggedShip?.textContent.split("-")[1];
+
+          if (!draggedShip || !length) return;
+
+          const start = validLocation[0];
+          const end = validLocation[validLocation.length - 1];
+
+          if (!start || !end) return;
+
+          const startCoordinate = start.id.split("-");
+          const endCoordinate = end.id.split("-");
+
+          player.getPlayerBoard().placeShip(
+            {
+              start: [
+                Number(startCoordinate[2]),
+                Number(startCoordinate[4]),
+              ] as ICoordinate,
+              end: [
+                Number(endCoordinate[2]),
+                Number(endCoordinate[4]),
+              ] as ICoordinate,
+            },
+            Ship(Number(length)),
+          );
+
+          markPlacedShipInBoard(identifier, true);
 
           draggedShip.remove();
+
+          const ship = document.querySelectorAll(".ship-predetermined");
+
+          if (ship.length === 0) {
+            const enemyArea = document.querySelector<HTMLDivElement>(
+              `#${identifier === "computer" ? "player" : "computer"}-area`,
+            );
+
+            if (!enemyArea) return;
+
+            enemyArea.style.display = "";
+          }
         }
       });
     });
