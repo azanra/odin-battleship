@@ -336,7 +336,7 @@ const PlayerView = (
         }
       });
 
-      item.addEventListener("dragenter", (event: Event) => {
+      item.addEventListener("dragenter", () => {
         const draggedShip = document.querySelector("#dragged-ship");
         const length = Number(draggedShip?.textContent.split("-")[1]);
 
@@ -362,6 +362,22 @@ const PlayerView = (
 
         const counter = isHorizontal ? column : row;
 
+        let currentRange: ICoordinate[] = [];
+
+        const START_RANGE = 0;
+        const END_RANGE = 10;
+
+        const addNotValidShip = () => {
+          const validLocation = document.querySelectorAll(".valid-location");
+
+          validLocation.forEach((item) => {
+            item.classList.remove("valid-location");
+            item.classList.add("not-valid-location");
+          });
+        };
+
+        const isInRange = player.getPlayerBoard().isInRangeOfCoordinate;
+
         for (let i = counter; i < counter + length; i++) {
           const nextItem = document.querySelector(
             isHorizontal
@@ -369,18 +385,69 @@ const PlayerView = (
               : `#${identifier}-row-${i}-col-${column}`,
           );
 
-          if (!nextItem) {
-            const validLocation = document.querySelectorAll(".valid-location");
+          const nextRow = Number(nextItem?.id.split("-")[2]);
+          const nextColumn = Number(nextItem?.id.split("-")[4]);
 
-            validLocation.forEach((item) => {
-              item.classList.remove("valid-location");
-              item.classList.add("not-valid-location");
-            });
+          const rowColInRange =
+            isInRange(nextRow, START_RANGE, END_RANGE - 1) &&
+            isInRange(nextColumn, START_RANGE, END_RANGE - 1);
 
+          const currentShip =
+            rowColInRange &&
+            player
+              .getPlayerBoard()
+              .getShip([nextRow, nextColumn] as ICoordinate);
+
+          if (rowColInRange) {
+            currentRange = [
+              ...currentRange,
+              [nextRow, nextColumn] as ICoordinate,
+            ];
+          }
+
+          if (!nextItem || (nextItem && currentShip && currentShip.ship)) {
+            addNotValidShip();
             return;
           }
 
           nextItem?.classList.add("valid-location");
+        }
+
+        if (currentRange.length > 1) {
+          const createNextRange = PREDETERMINED_SHIP().createNextRange;
+
+          const start = currentRange[0];
+          const end = currentRange[currentRange.length - 1];
+
+          if (!start || !end) return;
+
+          const nextRange = createNextRange({
+            start,
+            end,
+          });
+
+          console.log({ nextRange });
+
+          nextRange.forEach((item) => {
+            const [x, y] = item;
+            if (
+              !x ||
+              !y ||
+              !isInRange(x, START_RANGE, END_RANGE - 1) ||
+              !isInRange(y, START_RANGE, END_RANGE - 1)
+            )
+              return;
+
+            const currentShip = player
+              .getPlayerBoard()
+              .getShip(item as ICoordinate);
+
+            console.log({ x, y, currentShip });
+
+            if (currentShip.ship) {
+              addNotValidShip();
+            }
+          });
         }
       });
 
