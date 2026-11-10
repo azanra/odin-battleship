@@ -69,10 +69,11 @@ main {
   gap: 32px;
 }
 
-#game-action {
+.game-action-container {
   margin-top: 128px;
   display: flex;
   justify-content: center;
+  gap: 64px;
 }
 
 .ship-predetermined {

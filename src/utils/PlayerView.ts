@@ -22,7 +22,7 @@ const PlayerView = (
   const randomButton = document.querySelector<HTMLButtonElement>(
     `#${identifier}-action-randomize`,
   );
-  const positionButton = document.querySelector(
+  const positionButton = document.querySelector<HTMLButtonElement>(
     `#${identifier}-action-position`,
   );
   const shipArea = document.querySelector("#ship-position-area");
@@ -250,6 +250,14 @@ const PlayerView = (
     rowIndexContainer?.replaceChildren();
     columnIndexContainer?.replaceChildren();
     player.getPlayerBoard().resetBoard();
+  };
+
+  const disableActionButton = (isDisabled = false) => {
+    if (!randomButton || !positionButton || !axisButton) return;
+
+    randomButton.disabled = isDisabled;
+    positionButton.disabled = isDisabled;
+    axisButton.disabled = isDisabled;
   };
 
   const randomAddListener = () => {
@@ -533,6 +541,7 @@ const PlayerView = (
     disableRandomizerButton,
     positionListener,
     axisListener,
+    disableActionButton,
   };
 };
 

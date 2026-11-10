@@ -9,9 +9,12 @@ const Controller = (() => {
   const computerView = PlayerView("computer", computer);
 
   const startGameButton = document.querySelector("#game-action");
+  const twoPlayerButton = document.querySelector("#two-player-action");
+
+  let isSinglePlayer = true;
 
   const startGame = () => {
-    if (!startGameButton) return;
+    if (!startGameButton || !twoPlayerButton) return;
 
     playerView.populate();
     playerView.randomAddListener();
@@ -20,17 +23,67 @@ const Controller = (() => {
 
     computerView.populate();
     computerView.randomAddListener();
-    computerView.hideBoard();
+    computerView.positionListener();
+    computerView.axisListener();
+
+    if (isSinglePlayer) {
+      computerView.hideBoard();
+    }
+
+    computerView.disableRandomizerButton(isSinglePlayer);
+    computerView.disableActionButton(isSinglePlayer);
 
     startGameButton.addEventListener("click", () => {
       playerView.disableRandomizerButton(true);
+      playerView.disableActionButton(true);
+
       computerView.disableRandomizerButton(true);
+      computerView.disableActionButton(true);
+
+      if (isSinglePlayer) {
+        computerView.addListener(
+          "computer",
+          () => setTimeout(() => computerTurn(), 2000),
+          () => checkIsGameEnding(),
+        );
+
+        return;
+      }
 
       computerView.addListener(
         "computer",
-        () => setTimeout(() => computerTurn(), 2000),
-        () => checkIsGameEnding(),
+        () => {
+          playerView.disableButton(false);
+        },
+        () => {
+          checkIsGameEnding();
+        },
       );
+
+      playerView.addListener(
+        "player",
+        () => {
+          computerView.disableButton(false);
+        },
+        () => {
+          checkIsGameEnding();
+        },
+      );
+
+      computerView.hideBoard();
+
+      playerView.hideBoard();
+      playerView.disableButton();
+    });
+
+    twoPlayerButton.addEventListener("click", () => {
+      isSinglePlayer = !isSinglePlayer;
+      twoPlayerButton.textContent = isSinglePlayer
+        ? "Two Player"
+        : "One Player";
+
+      computerView.disableRandomizerButton(isSinglePlayer);
+      computerView.disableActionButton(isSinglePlayer);
     });
   };
 
