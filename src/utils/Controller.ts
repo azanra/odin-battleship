@@ -82,6 +82,12 @@ const Controller = (() => {
         ? "Two Player"
         : "One Player";
 
+      if (isSinglePlayer) {
+        computerView.resetGameBoard();
+        computerView.populate();
+        computerView.hideBoard();
+      }
+
       computerView.disableRandomizerButton(isSinglePlayer);
       computerView.disableActionButton(isSinglePlayer);
     });
