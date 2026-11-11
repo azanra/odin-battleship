@@ -1,6 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
 import GameBoard from "../utils/GameBoard";
 import Player from "../utils/Player";
+import type { ICoordinate } from "../interfaces/GameBoardInterface";
+import PREDETERMINED_SHIP from "../constants/predeterminedShip";
 
 describe("Player", () => {
   const player = Player();
@@ -23,6 +25,27 @@ describe("Player", () => {
     expect(
       isInRangeOfCoordinate(x, range.min, range.max) &&
         isInRangeOfCoordinate(y, range.min, range.max),
+    ).toBe(true);
+  });
+
+  test("return random adjacent given coordinate", () => {
+    const randomCoordinate: ICoordinate = [1, 1];
+
+    const expectedCoordinate: ICoordinate[] = [
+      [0, 1],
+      [1, 0],
+      [1, 2],
+      [2, 1],
+    ];
+
+    const randomAdjacentCoordinate =
+      player.getRandomAdjacentBoard(randomCoordinate);
+
+    expect(
+      PREDETERMINED_SHIP().checkIfArrayContain(
+        expectedCoordinate,
+        randomAdjacentCoordinate,
+      ),
     ).toBe(true);
   });
 
