@@ -104,7 +104,33 @@ const Controller = (() => {
         computerView.disableButton(false);
       },
       () => {
-        setTimeout(() => computerTurn(), 2000);
+        setTimeout(() => {
+          const randomAdjacentCoordinate = player.getRandomAdjacentBoard([
+            x,
+            y,
+          ]);
+
+          if (!randomAdjacentCoordinate) return;
+
+          const currentShip = player
+            .getPlayerBoard()
+            .getShip(randomAdjacentCoordinate);
+
+          if (currentShip.isAttacked) return;
+
+          player.getPlayerBoard().receiveAttack(randomAdjacentCoordinate);
+
+          playerView.updateBoardAfterAttack(
+            randomAdjacentCoordinate[0],
+            randomAdjacentCoordinate[1],
+            () => {
+              computerView.disableButton(false);
+            },
+            () => {
+              computerTurn();
+            },
+          );
+        }, 2000);
       },
     );
   };
