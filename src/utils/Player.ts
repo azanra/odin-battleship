@@ -1,3 +1,4 @@
+import ADJACENT_COORDINATE from "../constants/adjacentCoordinate.ts";
 import type {
   ICoordinate,
   ShipCoordinateRange,
@@ -53,7 +54,36 @@ const Player = () => {
     return legalCoordinate as unknown as ILegalCoordinate;
   };
 
-  return { getPlayerBoard, getRandomCoordinate, randomLegalAttack };
+  const getRandomAdjacentBoard = (coordinate: ICoordinate) => {
+    const randomAdjacentCoordinate = ADJACENT_COORDINATE.map((item) => {
+      const [x, y] = coordinate;
+
+      return [x + item.x, y + item.y] as ICoordinate;
+    }).filter((item) => {
+      const [x, y] = item;
+      const isInRangeOfCoordinate = GameBoard().isInRangeOfCoordinate;
+
+      return isInRangeOfCoordinate(x, 0, 9) && isInRangeOfCoordinate(y, 0, 9);
+    });
+
+    const randomIntervalNumber = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+
+    const randomIndex = randomIntervalNumber(
+      0,
+      randomAdjacentCoordinate.length - 1,
+    );
+
+    return randomAdjacentCoordinate[randomIndex];
+  };
+
+  return {
+    getPlayerBoard,
+    getRandomCoordinate,
+    randomLegalAttack,
+    getRandomAdjacentBoard,
+  };
 };
 
 export default Player;

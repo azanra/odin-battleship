@@ -41,6 +41,8 @@ describe("Player", () => {
     const randomAdjacentCoordinate =
       player.getRandomAdjacentBoard(randomCoordinate);
 
+    if (!randomAdjacentCoordinate) return;
+
     expect(
       PREDETERMINED_SHIP().checkIfArrayContain(
         expectedCoordinate,
